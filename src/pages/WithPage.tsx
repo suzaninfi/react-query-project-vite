@@ -4,13 +4,10 @@ import styled from "styled-components";
 import { fetchEpisodes } from "../api/api.ts";
 import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "../components/Spinner.tsx";
+import { UseQueryHookOptions } from "../types/queryTypes.ts";
 
 export const WithPage = () => {
-  const { data, isPending, error } = useQuery<EpisodesResponse, Error>({
-    queryKey: ["episodes"],
-    queryFn: () => fetchEpisodes(1),
-  });
-
+  const { data, isPending, error } = useEpisodesQuery();
   if (isPending) {
     return <Spinner />;
   }
@@ -33,6 +30,14 @@ export const WithPage = () => {
       </Episodes>
     </>
   );
+};
+
+const useEpisodesQuery = (options?: UseQueryHookOptions<EpisodesResponse>) => {
+  return useQuery<EpisodesResponse>({
+    queryKey: ["episodes"],
+    queryFn: () => fetchEpisodes(1),
+    ...options,
+  });
 };
 
 const Episodes = styled.div`
