@@ -1,11 +1,10 @@
-import { EpisodeDto, EpisodesResponse } from "../api/dtos.ts";
+import { EpisodeDto } from "../api/dtos.ts";
 import { fetchEpisodes } from "../api/api.ts";
 import styled from "styled-components";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const InfinitePage = () => {
-  const initialPageParam = 1;
   const {
     data,
     error,
@@ -13,25 +12,24 @@ export const InfinitePage = () => {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-    isLoading,
+    isPending,
     isError,
-  } = useInfiniteQuery<EpisodesResponse, Error>(
-    ["infinite-episodes"],
-    (data) => fetchEpisodes(data.pageParam || initialPageParam),
-    {
-      getNextPageParam: (lastPage) => {
-        const nextUrl = lastPage.info.next;
-        if (nextUrl === null) {
-          return undefined;
-        }
-        return parseInt(
-          nextUrl.replace("https://rickandmortyapi.com/api/episode?page=", ""),
-        );
-      },
+  } = useInfiniteQuery({
+    queryKey: ["infinite-episodes"],
+    queryFn: ({ pageParam }) => fetchEpisodes(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextUrl = lastPage.info.next;
+      if (nextUrl === null) {
+        return undefined;
+      }
+      return parseInt(
+        nextUrl.replace("https://rickandmortyapi.com/api/episode?page=", ""),
+      );
     },
-  );
+  });
 
-  if (isLoading) {
+  if (isPending) {
     return <span>Loading...</span>;
   }
   if (isError) {

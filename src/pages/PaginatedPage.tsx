@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { EpisodeDto, EpisodesResponse } from "../api/dtos.ts";
 import { fetchEpisodes } from "../api/api.ts";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
@@ -8,16 +8,17 @@ import styled from "styled-components";
 export const PaginatedPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
 
-  const { isLoading, isError, data, error, isFetching } = useQuery<
+  const { isPending, isError, data, error, isFetching } = useQuery<
     EpisodesResponse,
     Error
-  >(["episodes", pageNumber], () => fetchEpisodes(pageNumber), {
+  >({
+    queryKey: ["episodes", pageNumber],
+    queryFn: () => fetchEpisodes(pageNumber),
     refetchOnWindowFocus: true,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
-  // only the case when there is no cached data and the query is currently fetching
-  if (isLoading) {
+  if (isPending) {
     return <span>Loading...</span>;
   }
   if (isError) {

@@ -5,17 +5,17 @@ import { fetchEpisodes } from "../api/api.ts";
 import { useQuery } from "@tanstack/react-query";
 
 export const WithPage = () => {
-  const { data, isLoading, error } = useQuery<EpisodesResponse, Error>(
-    ["episodes"],
-    () => fetchEpisodes(1),
-  );
+  const { data, isPending, error } = useQuery<EpisodesResponse, Error>({
+    queryKey: ["episodes"],
+    queryFn: () => fetchEpisodes(1),
+  });
+
+  if (isPending) {
+    return <p>Loading...</p>;
+  }
 
   if (error) {
     return <p>An error occurred: {error.message}</p>;
-  }
-
-  if (isLoading) {
-    return <p>Loading...</p>;
   }
 
   return (
