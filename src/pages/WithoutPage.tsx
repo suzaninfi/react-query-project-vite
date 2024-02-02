@@ -3,6 +3,7 @@ import { EpisodeDto, EpisodesResponse } from "../api/dtos.ts";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import styled from "styled-components";
 import { fetchEpisodes } from "../api/api.ts";
+import { Spinner } from "../components/Spinner.tsx";
 
 export const WithoutPage = () => {
   const [episodesResponse, setEpisodesResponse] = useState<
@@ -24,7 +25,7 @@ export const WithoutPage = () => {
   }
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Spinner />;
   }
 
   if (!episodesResponse) {

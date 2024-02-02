@@ -3,6 +3,7 @@ import { fetchEpisodes } from "../api/api.ts";
 import styled from "styled-components";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Spinner } from "../components/Spinner.tsx";
 
 export const InfinitePage = () => {
   const {
@@ -30,7 +31,7 @@ export const InfinitePage = () => {
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <Spinner />;
   }
   if (isError) {
     return <span>An error occurred: {error.message}</span>;

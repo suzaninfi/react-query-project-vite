@@ -4,6 +4,7 @@ import { EpisodeDto, EpisodesResponse } from "../api/dtos.ts";
 import { fetchEpisodes } from "../api/api.ts";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import styled from "styled-components";
+import { Spinner } from "../components/Spinner.tsx";
 
 export const PaginatedPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -19,7 +20,7 @@ export const PaginatedPage = () => {
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return <Spinner />;
   }
   if (isError) {
     return <span>An error occurred: {error.message}</span>;

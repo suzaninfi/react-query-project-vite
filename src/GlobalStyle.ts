@@ -6,6 +6,7 @@ export const Colors = {
   lightGray: "#535959",
   brightGrey: "#818888",
   boxShadowGrey: "#383d3c",
+  orange: "#f67905",
 } as const;
 
 export const GlobalStyle = createGlobalStyle`

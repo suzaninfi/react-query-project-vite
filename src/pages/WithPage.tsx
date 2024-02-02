@@ -3,6 +3,7 @@ import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import styled from "styled-components";
 import { fetchEpisodes } from "../api/api.ts";
 import { useQuery } from "@tanstack/react-query";
+import { Spinner } from "../components/Spinner.tsx";
 
 export const WithPage = () => {
   const { data, isPending, error } = useQuery<EpisodesResponse, Error>({
@@ -11,7 +12,7 @@ export const WithPage = () => {
   });
 
   if (isPending) {
-    return <p>Loading...</p>;
+    return <Spinner />;
   }
 
   if (error) {
