@@ -13,9 +13,10 @@ export const Nav: React.FC = () => {
   );
 };
 
-const Link: React.FC<
-  { to: string; $fontSize?: string } & PropsWithChildren
-> = ({ to, children }) => {
+const Link: React.FC<{ to: string; $fontSize?: string } & PropsWithChildren> = ({
+  to,
+  children,
+}) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
 

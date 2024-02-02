@@ -24,9 +24,7 @@ export const InfinitePage = () => {
       if (nextUrl === null) {
         return undefined;
       }
-      return parseInt(
-        nextUrl.replace("https://rickandmortyapi.com/api/episode?page=", ""),
-      );
+      return parseInt(nextUrl.replace("https://rickandmortyapi.com/api/episode?page=", ""));
     },
   });
 
@@ -53,10 +51,7 @@ export const InfinitePage = () => {
       })}
 
       <PaginationButtons>
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-        >
+        <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
           Load more
         </button>
       </PaginationButtons>

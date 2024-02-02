@@ -6,9 +6,7 @@ import { fetchEpisodes } from "../api/api.ts";
 import { Spinner } from "../components/Spinner.tsx";
 
 export const WithoutPage = () => {
-  const [episodesResponse, setEpisodesResponse] = useState<
-    EpisodesResponse | undefined
-  >();
+  const [episodesResponse, setEpisodesResponse] = useState<EpisodesResponse | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
 

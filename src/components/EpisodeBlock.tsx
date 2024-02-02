@@ -8,11 +8,7 @@ export interface EpisodeBlock {
   airDate: string;
 }
 
-export const EpisodeBlock: React.FC<EpisodeBlock> = ({
-  episodeId,
-  name,
-  airDate,
-}) => {
+export const EpisodeBlock: React.FC<EpisodeBlock> = ({ episodeId, name, airDate }) => {
   return (
     <Block>
       <h3>{name}</h3>

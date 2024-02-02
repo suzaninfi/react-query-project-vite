@@ -9,10 +9,7 @@ import { Spinner } from "../components/Spinner.tsx";
 export const PaginatedPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
 
-  const { isPending, isError, data, error, isFetching } = useQuery<
-    EpisodesResponse,
-    Error
-  >({
+  const { isPending, isError, data, error, isFetching } = useQuery<EpisodesResponse, Error>({
     queryKey: ["episodes", pageNumber],
     queryFn: () => fetchEpisodes(pageNumber),
     refetchOnWindowFocus: true,
