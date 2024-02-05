@@ -9,6 +9,7 @@ export const Nav: React.FC = () => {
       <Link to="/with">With</Link>
       <Link to="/paginated">Paginated</Link>
       <Link to="/infinite">Infinite</Link>
+      <Link to="/optimistic">Optimistic</Link>
     </Navigation>
   );
 };

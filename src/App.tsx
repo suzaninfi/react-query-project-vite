@@ -6,6 +6,7 @@ import { InfinitePage } from "./pages/InfinitePage.tsx";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { OptimisticPage } from "./pages/OptimisticPage.tsx";
 
 const queryClient = new QueryClient({
   // global options for all queries
@@ -31,6 +32,7 @@ function App() {
             <Route path={"/with"} element={<WithPage />} />
             <Route path={"/paginated"} element={<PaginatedPage />} />
             <Route path={"/infinite"} element={<InfinitePage />} />
+            <Route path={"/optimistic"} element={<OptimisticPage />} />
           </Routes>
         </Page>
         <ReactQueryDevtools initialIsOpen={false} />

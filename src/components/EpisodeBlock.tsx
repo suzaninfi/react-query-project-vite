@@ -6,11 +6,12 @@ export interface EpisodeBlock {
   episodeId: number;
   name: string;
   airDate: string;
+  onClick?: () => void;
 }
 
-export const EpisodeBlock: React.FC<EpisodeBlock> = ({ episodeId, name, airDate }) => {
+export const EpisodeBlock: React.FC<EpisodeBlock> = ({ episodeId, name, airDate, onClick }) => {
   return (
-    <Block>
+    <Block onClick={onClick}>
       <h3>{name}</h3>
       <p>
         {episodeId} - {airDate}
