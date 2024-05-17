@@ -2,61 +2,66 @@ import { EpisodeDto, EpisodesResponse } from "../api/dtos.ts";
 import { EpisodeBlock } from "../components/EpisodeBlock.tsx";
 import styled from "styled-components";
 import { fetchEpisodes } from "../api/api.ts";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "../components/Spinner.tsx";
 import { UseQueryHookOptions } from "../types/queryTypes.ts";
-import { useState } from "react";
-import { delay } from "../util/util.ts";
+import { EpisodeRow } from "../components/EpisodeRow.tsx";
+import { addToWatchList, fetchWatchList } from "../api/backendApi.ts";
 
 export const OptimisticPage = () => {
-  const [favoriteEpisodes, setFavoriteEpisodes] = useState<EpisodeDto[]>([]);
+  const queryClient = useQueryClient();
+  const episodesResult = useEpisodesQuery();
 
-  const { data, isPending, error } = useEpisodesQuery();
-
-  const addFavoriteMutation = useMutation<EpisodeDto, Error, EpisodeDto>({
-    mutationFn: (episode: EpisodeDto) => {
-      return new Promise(() => {
-        delay(2000).then(() => setFavoriteEpisodes((prevEpisodes) => [...prevEpisodes, episode]));
-      });
+  const addToWatchListMutation = useMutation({
+    mutationFn: addToWatchList,
+    onSettled: async () => {
+      return await queryClient.invalidateQueries({ queryKey: ["toWatchList"] });
     },
   });
 
-  if (isPending) {
+  const watchListResult = useQuery({
+    queryKey: ["toWatchList"],
+    queryFn: fetchWatchList,
+  });
+
+  if (episodesResult.isPending) {
     return <Spinner />;
   }
 
-  if (error) {
-    return <p>An error occurred: {error.message}</p>;
+  if (episodesResult.error) {
+    return <p>An error occurred: {episodesResult.error.message}</p>;
   }
 
   return (
-    <>
-      <h3>Favorite episodes</h3>
-      <FavoriteEpisodes>
-        {favoriteEpisodes.map((episode: EpisodeDto) => (
-          <EpisodeBlock
-            key={episode.id}
-            episodeId={episode.id}
-            name={episode.name}
-            airDate={episode.air_date}
-          />
+    <Page>
+      <h3>Watch List</h3>
+      {watchListResult.isLoading && <Spinner />}
+      <EpisodesGroup>
+        {watchListResult.data?.map((episode) => (
+          <EpisodeRow key={episode.id} name={episode.name} />
         ))}
-      </FavoriteEpisodes>
+      </EpisodesGroup>
 
-      <Episodes>
-        {data.results
-          .filter((result) => !favoriteEpisodes.find((favEp) => favEp.id === result.id))
-          .map((result: EpisodeDto) => (
-            <EpisodeBlock
-              key={result.id}
-              episodeId={result.id}
-              name={result.name}
-              airDate={result.air_date}
-              onClick={() => addFavoriteMutation.mutate(result)}
-            />
+      <h3>All episodes</h3>
+      {addToWatchListMutation.isPending && <Spinner />}
+      <EpisodesGroup>
+        <Episodes>
+          {episodesResult.data.results.map((episode: EpisodeDto) => (
+            <div>
+              <EpisodeBlock
+                key={episode.id}
+                episodeId={episode.id}
+                name={episode.name}
+                airDate={episode.air_date}
+                onClick={() =>
+                  addToWatchListMutation.mutate({ id: episode.id.toString(), name: episode.name })
+                }
+              />
+            </div>
           ))}
-      </Episodes>
-    </>
+        </Episodes>
+      </EpisodesGroup>
+    </Page>
   );
 };
 
@@ -68,17 +73,26 @@ const useEpisodesQuery = (options?: UseQueryHookOptions<EpisodesResponse>) => {
   });
 };
 
-const FavoriteEpisodes = styled.div`
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 1.5rem;
+`;
+
+const EpisodesGroup = styled.div`
   display: flex;
   flex-direction: row;
-  border: 1px solid white;
+  border: 1px solid gray;
   flex-wrap: wrap;
   width: 70rem;
+  padding: 1rem;
+  gap: 1rem;
+  min-height: 3rem;
 `;
 
 const Episodes = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 51.2rem;
 `;
